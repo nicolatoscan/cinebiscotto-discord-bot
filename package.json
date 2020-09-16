@@ -1,0 +1,25 @@
+{
+  "name": "cinebiscotto_discord_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bin/bot",
+    "dev": "tsc-watch --onSuccess \"node bin/bot\"",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NicolaToscan/cinebiscotto_discord_bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NicolaToscan/cinebiscotto_discord_bot/issues"
+  },
+  "homepage": "https://github.com/NicolaToscan/cinebiscotto_discord_bot#readme",
+  "dependencies": {
+    "discord.js": "^12.3.1"
+  }
+}
