@@ -21,9 +21,13 @@ export default class Sala {
 
 
 
-    public closeSala() {
+    public closeSala(): void {
         this.members.forEach(m => {
             m.roles.remove(this.role);
         })
+    }
+
+    public isInSala(m: GuildMember): boolean {
+        return this.members.indexOf(m) >= 0;
     }
 }
