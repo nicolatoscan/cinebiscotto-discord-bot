@@ -66,7 +66,7 @@ class Bot {
                         this.sala.closeSala();
                         this.sala = null;
                     }
-                }, h * 1000)
+                }, h * 60 * 60 * 1000)
 
                 msg.reply(`La sala da ${posti} posti è stata creata per ${h} ore.`);
 
