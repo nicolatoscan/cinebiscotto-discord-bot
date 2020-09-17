@@ -77,13 +77,14 @@ class Bot {
             return;
         } else if (params[0] === 'chiudi') {
             //CHIUDI
-            if (this.sala !== null) {
+            if (this.sala === null) {
+                msg.reply("Nessuna sala trovata");
+            } else if (!this.sala.isInSala(msg.member)) {
+                msg.reply("Devi essere nella sala per poter chiuderla");
+            } else {
                 this.sala.closeSala();
                 this.sala = null;
                 msg.reply("La sala è stata chiusa");
-            }
-            else {
-                msg.reply("Nessuna sala trovata");
             }
             return;
         }
