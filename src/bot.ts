@@ -23,7 +23,7 @@ class Bot {
         this.bot.on('message', msg => this.onMessage(msg));
     }
 
-    private onMessage(msg: Message) {
+    private async onMessage(msg: Message) {
 
         let params: string[] = msg.content.split(" ");
 
@@ -42,7 +42,11 @@ class Bot {
     }
 
     private helpMsg(msg: Message, params: string[]) {
-        msg.reply("\n`ping` - Pingami\n`sala <nr ore> <nr posti>` - Crea una sala\n`biglietto` - Ottieni un biglietto\n`chiudi` - Chiudi la sala")
+        msg.reply(
+            "\n`ping` - Pingami\n"
+             + "`sala <nr ore> <nr posti>` - Crea una sala\n"
+            + "`biglietto <nr sala>` - Ottieni un biglietto per la Sala X\n"
+            + "`chiudi <nr sala>` - Chiudi la Sala X")
     }
 
     private pingMsg(msg: Message, params: string[]) {
@@ -51,8 +55,7 @@ class Bot {
 
     private bigliettoMsg(msg: Message, params: string[]) {
         
-        
-        if (params.length >= 1) {
+        if (params.length >= 2) {
             let nr = +params[1];
 
             let sala = Sala.sale.find(s => s.getIndex() == nr);
@@ -60,7 +63,7 @@ class Bot {
                 msg.reply('Errore: Sala non trovata');
                 return;
             }
-            if (sala.reserve(msg.member)) {
+            if (!sala.reserve(msg.member)) {
                 msg.reply('Errore: La sala è piena');
                 return;
             }
@@ -74,12 +77,13 @@ class Bot {
     }
 
     private async salaMsg(msg: Message, params: string[]) {
+
         if (Sala.sale.length >= 100) {
             msg.reply('Il multisala ha finito le sale');
             return;
         }
 
-        if (params.length >= 2) {
+        if (params.length >= 3) {
             let h: number = +params[1];
             let posti: number = +params[2];
 
@@ -87,7 +91,6 @@ class Bot {
                 msg.reply('Errore: la sala può essere al massimo di 6 ore');
                 return;
             }
-
 
             let sala = new Sala(posti, msg.guild, h);
             await sala.setUp();
@@ -99,8 +102,22 @@ class Bot {
         }
     }
 
-    private chiudiMsg(msg: Message, params: string[]) {
-        msg.reply("TODO");
+    private async chiudiMsg(msg: Message, params: string[]) {
+        if (params.length >= 2) {
+            let nr = +params[1];
+
+            let sala = Sala.sale.find(s => s.getIndex() == nr);
+            if (!sala) {
+                msg.reply('Errore: Sala non trovata');
+                return;
+            }
+            
+            await sala.closeSala();
+            msg.reply(`Sala ${nr} chiusa.`);
+
+        } else {
+            msg.reply('Errore: usa `biglietto <numero sala>`');
+        }
     }
 
 

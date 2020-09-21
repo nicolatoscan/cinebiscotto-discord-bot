@@ -1,4 +1,5 @@
 import { Guild, GuildMember, Role, VoiceChannel } from "discord.js";
+import { allowedNodeEnvironmentFlags } from "process";
 
 export default class Sala {
 
@@ -11,6 +12,7 @@ export default class Sala {
     private role: Role = null;
     private channel: VoiceChannel = null;
     private members: GuildMember[] = [];
+    private closed: boolean;
 
 
     constructor(max: number, guild: Guild, lenghtH: number) {
@@ -18,9 +20,10 @@ export default class Sala {
         this.index = Sala.currIndex;
         this.max = max;
         this.guild = guild;
+        this.closed = false;
 
-        setTimeout(() => {
-            this.closeSala();
+        setTimeout(async () => {
+            await this.closeSala();
         }, lenghtH * 1000 * 60 * 60)
 
     }
@@ -36,12 +39,17 @@ export default class Sala {
 
         this.channel = await this.guild.channels.create(`Sala ${this.index}`, {
             type: 'voice',
+            parent: this.guild.channels.cache.find(c => c.name.indexOf("Voice Channels") >= 0),
             permissionOverwrites: [{
                 id: this.guild.id,
-                allow: ['CONNECT']
-            },{
+                allow: ['MANAGE_CHANNELS'],
+                deny: ['CONNECT']
+            }, {
+                id: this.guild.roles.cache.find(r => r.name.indexOf("CineBiscotto") >= 0),
+                allow: ["MANAGE_CHANNELS"]
+            }, {
                 id: this.role.id,
-                allow: ['CONNECT']
+                allow: ['CONNECT', 'MANAGE_CHANNELS']
             }]
         })
     }
@@ -57,12 +65,20 @@ export default class Sala {
         return false;
     }
 
-    public closeSala(): void {
-        this.members.forEach(m => {
-            m.roles.remove(this.role);
+    public async closeSala(): Promise<void> {
+        if (this.closed)
+            return;
+
+        this.closed = true;
+        this.members.forEach(async m => {
+            await m.roles.remove(this.role);
         })
-        this.channel.delete();
-        Sala.sale = Sala.sale.filter(s => s != null)
+        await this.role.delete();
+        await this.channel.delete();
+
+        Sala.sale = Sala.sale.filter(s => s != this)
+        if (Sala.sale.length === 0)
+            Sala.currIndex = 0;
     }
 
     public isInSala(m: GuildMember): boolean {
