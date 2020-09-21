@@ -87,15 +87,14 @@ class Bot {
             let h: number = +params[1];
             let posti: number = +params[2];
 
-            if (h > 6) {
+            if (h <= 6 && h >= 1) {
+                let sala = new Sala(posti, msg.guild, h);
+                await sala.setUp();
+                Sala.sale.push(sala);
+                msg.reply(`La sala ${sala.getIndex()} da ${posti} posti è stata creata per ${h} ore.`);
+            } else {
                 msg.reply('Errore: la sala può essere al massimo di 6 ore');
-                return;
             }
-
-            let sala = new Sala(posti, msg.guild, h);
-            await sala.setUp();
-            Sala.sale.push(sala);
-            msg.reply(`La sala ${sala.getIndex()} da ${posti} posti è stata creata per ${h} ore.`);
 
         } else {
             msg.reply('Errore: usa `sala <nr ore> <nr posti>`');
