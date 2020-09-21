@@ -23,7 +23,7 @@ export default class Sala {
         this.closed = false;
 
         setTimeout(async () => {
-            await this.closeSala();
+            await this.closeSala(null);
         }, lenghtH * 1000 * 60 * 60)
 
     }
@@ -65,20 +65,25 @@ export default class Sala {
         return false;
     }
 
-    public async closeSala(): Promise<void> {
+    public async closeSala(member: GuildMember): Promise<boolean> {
         if (this.closed)
             return;
 
-        this.closed = true;
-        this.members.forEach(async m => {
-            await m.roles.remove(this.role);
-        })
-        await this.role.delete();
-        await this.channel.delete();
-
-        Sala.sale = Sala.sale.filter(s => s != this)
-        if (Sala.sale.length === 0)
+        if (member == null || member.roles.cache.find(r => r.name === this.role.name)) {
+            
+            this.closed = true;
+            this.members.forEach(async m => {
+                await m.roles.remove(this.role);
+            })
+            await this.role.delete();
+            await this.channel.delete();
+            
+            Sala.sale = Sala.sale.filter(s => s != this)
+            if (Sala.sale.length === 0)
             Sala.currIndex = 0;
+            return true;
+        }
+        return false;
     }
 
     public isInSala(m: GuildMember): boolean {

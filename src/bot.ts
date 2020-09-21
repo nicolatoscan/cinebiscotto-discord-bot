@@ -44,7 +44,7 @@ class Bot {
     private helpMsg(msg: Message, params: string[]) {
         msg.reply(
             "\n`ping` - Pingami\n"
-             + "`sala <nr ore> <nr posti>` - Crea una sala\n"
+            + "`sala <nr ore> <nr posti>` - Crea una sala\n"
             + "`biglietto <nr sala>` - Ottieni un biglietto per la Sala X\n"
             + "`chiudi <nr sala>` - Chiudi la Sala X")
     }
@@ -54,7 +54,7 @@ class Bot {
     }
 
     private bigliettoMsg(msg: Message, params: string[]) {
-        
+
         if (params.length >= 2) {
             let nr = +params[1];
 
@@ -73,7 +73,7 @@ class Bot {
         } else {
             msg.reply('Errore: usa `biglietto <numero sala>`');
         }
-        
+
     }
 
     private async salaMsg(msg: Message, params: string[]) {
@@ -87,13 +87,18 @@ class Bot {
             let h: number = +params[1];
             let posti: number = +params[2];
 
-            if (h <= 6 && h >= 1) {
+            if (h >= 1 && posti >= 1) {
+                if (h > 6 || posti > 100) {
+                    msg.reply('Errore: massimo 6 ore e 100 posti`');
+                    return;
+                }
+
                 let sala = new Sala(posti, msg.guild, h);
                 await sala.setUp();
                 Sala.sale.push(sala);
                 msg.reply(`La sala ${sala.getIndex()} da ${posti} posti è stata creata per ${h} ore.`);
             } else {
-                msg.reply('Errore: la sala può essere al massimo di 6 ore');
+                msg.reply('Errore: usa `sala <nr ore> <nr posti>`');
             }
 
         } else {
@@ -104,15 +109,16 @@ class Bot {
     private async chiudiMsg(msg: Message, params: string[]) {
         if (params.length >= 2) {
             let nr = +params[1];
-
             let sala = Sala.sale.find(s => s.getIndex() == nr);
             if (!sala) {
                 msg.reply('Errore: Sala non trovata');
                 return;
             }
-            
-            await sala.closeSala();
-            msg.reply(`Sala ${nr} chiusa.`);
+
+            if (await sala.closeSala(msg.member))
+                msg.reply(`Sala ${nr} chiusa.`);
+            else
+                msg.reply(`Impossibile chiudere la sala.`);
 
         } else {
             msg.reply('Errore: usa `biglietto <numero sala>`');
