@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { Client, Message, Channel, GuildMember } from 'discord.js';
+import { Client, Message, Channel, GuildMember, TextChannel } from 'discord.js';
 import Sala from './sala';
 
 dotenv.config();
@@ -24,7 +24,9 @@ class Bot {
     }
 
     private async onMessage(msg: Message) {
-
+        if ((<TextChannel> msg.channel).name !== "biglietteria")
+            return;
+            
         let params: string[] = msg.content.split(" ");
 
         if (params[0] === 'help') {
