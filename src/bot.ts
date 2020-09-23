@@ -46,7 +46,7 @@ class Bot {
     private helpMsg(msg: Message, params: string[]) {
         msg.reply(
             "\n`ping` - Pingami\n"
-            + "`sala <nr ore> <nr posti>` - Crea una sala\n"
+            + "`sala <nr di ore> <nr di posti>` - Crea una sala ore e posti\n"
             + "`biglietto <nr sala>` - Ottieni un biglietto per la Sala X\n"
             + "`chiudi <nr sala>` - Chiudi la Sala X")
     }
@@ -62,18 +62,18 @@ class Bot {
 
             let sala = Sala.sale.find(s => s.getIndex() == nr);
             if (!sala) {
-                msg.reply('Errore: Sala non trovata');
+                msg.reply('Error: Sala non trovata');
                 return;
             }
             if (!sala.reserve(msg.member)) {
-                msg.reply('Errore: La sala è piena');
+                msg.reply('Error: La sala è piena');
                 return;
             }
 
-            msg.reply(`Ecco il biglietto per la sala ${nr}.`);
+            msg.reply(`Eccoti il biglietto per la sala ${nr} buona visione :)`);
 
         } else {
-            msg.reply('Errore: usa `biglietto <numero sala>`');
+            msg.reply('Error: usa `biglietto <nr sala>`');
         }
 
     }
@@ -81,7 +81,7 @@ class Bot {
     private async salaMsg(msg: Message, params: string[]) {
 
         if (Sala.sale.length >= 100) {
-            msg.reply('Il multisala ha finito le sale');
+            msg.reply('Il multisala ha esaurito le sale');
             return;
         }
 
@@ -91,20 +91,20 @@ class Bot {
 
             if (h >= 1 && posti >= 1) {
                 if (h > 6 || posti > 100) {
-                    msg.reply('Errore: massimo 6 ore e 100 posti`');
+                    msg.reply('Error: la sala può essere di massimo 6 ore e 100 posti`');
                     return;
                 }
 
                 let sala = new Sala(posti, msg.guild, h);
                 await sala.setUp();
                 Sala.sale.push(sala);
-                msg.reply(`La sala ${sala.getIndex()} da ${posti} posti è stata creata per ${h} ore.`);
+                msg.reply(`Sala ${sala.getIndex()} da ${posti} posti è stata creata per ${h} ore`);
             } else {
-                msg.reply('Errore: usa `sala <nr ore> <nr posti>`');
+                msg.reply('Error: usa `sala <nr ore> <nr posti>`');
             }
 
         } else {
-            msg.reply('Errore: usa `sala <nr ore> <nr posti>`');
+            msg.reply('Error: usa `sala <nr ore> <nr posti>`');
         }
     }
 
@@ -113,17 +113,17 @@ class Bot {
             let nr = +params[1];
             let sala = Sala.sale.find(s => s.getIndex() == nr);
             if (!sala) {
-                msg.reply('Errore: Sala non trovata');
+                msg.reply('404 Sala non trovata');
                 return;
             }
 
             if (await sala.closeSala(msg.member))
-                msg.reply(`Sala ${nr} chiusa.`);
+                msg.reply(`Grazie aver tenuto pulito, la sala ${nr} è stata chiusa`);
             else
-                msg.reply(`Impossibile chiudere la sala.`);
+                msg.reply(`Impossibile chiudere la sala`);
 
         } else {
-            msg.reply('Errore: usa `biglietto <numero sala>`');
+            msg.reply('Error: usa `biglietto <nr sala>`');
         }
     }
 
