@@ -24,7 +24,7 @@ class Bot {
     }
 
     private async onMessage(msg: Message) {
-        if ((<TextChannel> msg.channel).name !== "ticket hesperia")
+        if ((<TextChannel> msg.channel).name !== "biglietteria")
             return;
             
         let params: string[] = msg.content.split(" ");
