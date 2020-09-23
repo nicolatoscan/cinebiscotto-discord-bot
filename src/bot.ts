@@ -24,20 +24,20 @@ class Bot {
     }
 
     private async onMessage(msg: Message) {
-        if ((<TextChannel> msg.channel).name !== "biglietteria")
+        if ((<TextChannel> msg.channel).name !== "ticket hesperia")
             return;
             
         let params: string[] = msg.content.split(" ");
 
-        if (params[0] === 'help') {
+        if (params[0] === 'help' ||  params[0] === 'aiuto' ||  params[0] === 'sos' ||  params[0] === 'SOS') {
             this.helpMsg(msg, params);
         } else if (params[0] === 'ping') {
             this.pingMsg(msg, params);
-        } else if (params[0] === 'biglietto') {
+        } else if (params[0] === 'biglietto' ||  params[0] === 'ticket') {
             this.bigliettoMsg(msg, params);
-        } else if (params[0] === 'sala') {
+        } else if (params[0] === 'sala' ||  params[0] === 'saloon' ||  params[0] === 'salone') {
             this.salaMsg(msg, params);
-        } else if (params[0] === 'chiudi') {
+        } else if (params[0] === 'chiudi' ||  params[0] === 'close' ||  params[0] === 'chiudi sala') {
             this.chiudiMsg(msg, params);
         }
 
@@ -47,8 +47,8 @@ class Bot {
         msg.reply(
             "\n`ping` - Pingami\n"
             + "`sala <nr di ore> <nr di posti>` - Crea una sala ore e posti\n"
-            + "`biglietto <nr sala>` - Ottieni un biglietto per la Sala X\n"
-            + "`chiudi <nr sala>` - Chiudi la Sala X")
+            + "`biglietto o ticket <nr sala>` - Ottieni un biglietto per la Sala X\n"
+            + "`chiudi o chiudi sala <nr sala>` - Chiudi la Sala X")
     }
 
     private pingMsg(msg: Message, params: string[]) {
@@ -62,7 +62,7 @@ class Bot {
 
             let sala = Sala.sale.find(s => s.getIndex() == nr);
             if (!sala) {
-                msg.reply('Error: Sala non trovata');
+                msg.reply('404 Sala non trovata');
                 return;
             }
             if (!sala.reserve(msg.member)) {
@@ -80,7 +80,7 @@ class Bot {
 
     private async salaMsg(msg: Message, params: string[]) {
 
-        if (Sala.sale.length >= 100) {
+        if (Sala.sale.length >= 20) {
             msg.reply('Il multisala ha esaurito le sale');
             return;
         }
@@ -90,8 +90,8 @@ class Bot {
             let posti: number = +params[2];
 
             if (h >= 1 && posti >= 1) {
-                if (h > 6 || posti > 100) {
-                    msg.reply('Error: la sala può essere di massimo 6 ore e 100 posti`');
+                if (h > 10 || posti > 50) {
+                    msg.reply('Error: la sala può essere di massimo 10 ore e 50 posti');
                     return;
                 }
 
