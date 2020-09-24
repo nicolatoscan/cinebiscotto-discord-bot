@@ -131,14 +131,16 @@ class Bot {
 
     private async countdown(msg: Message, params: string[]) {
         let channel = msg.member.voice.channel;
-        let conn = await channel.join();
-        let dispatcher = conn.play("./asssets/countdown.mp3");
-
-        dispatcher.on('finish', f => {
-            setTimeout(() => {
-                channel.leave();
-            }, 300)
-        })
+        if (channel) {
+            let conn = await channel.join();
+            let dispatcher = conn.play("./asssets/countdown.mp3");
+            
+            dispatcher.on('finish', f => {
+                setTimeout(() => {
+                    channel.leave();
+                }, 300)
+            })
+        }
     }
 
 
