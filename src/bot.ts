@@ -24,20 +24,22 @@ class Bot {
     }
 
     private async onMessage(msg: Message) {
-        if ((<TextChannel> msg.channel).name !== "biglietteria")
+        if ((<TextChannel>msg.channel).name !== "biglietteria")
             return;
-            
+
         let params: string[] = msg.content.split(" ");
 
-        if (params[0] === 'help' ||  params[0] === 'aiuto' ||  params[0] === 'sos' ||  params[0] === 'SOS') {
+        if (params[0] === 'help' || params[0] === 'aiuto' || params[0] === 'sos' || params[0] === 'SOS') {
             this.helpMsg(msg, params);
         } else if (params[0] === 'ping') {
             this.pingMsg(msg, params);
-        } else if (params[0] === 'biglietto' ||  params[0] === 'ticket') {
+        } else if (params[0] === 'countdown' || params[0] === 'cd') {
+            this.countdown(msg, params);
+        } else if (params[0] === 'biglietto' || params[0] === 'ticket') {
             this.bigliettoMsg(msg, params);
-        } else if (params[0] === 'sala' ||  params[0] === 'saloon' ||  params[0] === 'salone') {
+        } else if (params[0] === 'sala' || params[0] === 'saloon' || params[0] === 'salone') {
             this.salaMsg(msg, params);
-        } else if (params[0] === 'chiudi' ||  params[0] === 'close' ||  params[0] === 'chiudi sala') {
+        } else if (params[0] === 'chiudi' || params[0] === 'close' || params[0] === 'chiudi sala') {
             this.chiudiMsg(msg, params);
         }
 
@@ -125,6 +127,19 @@ class Bot {
         } else {
             msg.reply('Error: usa `biglietto <nr sala>`');
         }
+    }
+
+    private async countdown(msg: Message, params: string[]) {
+        console.log("CD");
+        let channel = msg.member.voice.channel;
+        let conn = await channel.join();
+        let dispatcher = conn.play("http://nicolatoscan.altervista.org/c.mp3");
+        console.log("OK");
+
+        dispatcher.end(cb => {
+            channel.leave();
+        })
+
     }
 
 
