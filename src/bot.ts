@@ -29,7 +29,7 @@ class Bot {
 
         let params: string[] = msg.content.split(" ");
 
-        switch (params[0]) {
+        switch (params[0].toLocaleLowerCase()) {
             case 'help':
             case 'aiuto':
             case 'h':
