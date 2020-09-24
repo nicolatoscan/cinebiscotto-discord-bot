@@ -79,13 +79,13 @@ class Bot {
             + "`ping`\n\n"
 
             + "Crea una sala ore e posti\n"
-            + "`sala | s  <nr di ore> <nr di posti>`\n\n"
+            + "`sala <nr di ore> <nr di posti>`\n\n"
 
             + "Ottieni un biglietto per la Sala X\n"
-            + "`biglietto | ticket | b | t <nr sala>`\n\n"
+            + "`biglietto o ticket <nr sala>`\n\n"
 
             + "Chiudi la Sala X\n"
-            + "`chiudi | close | c <nr sala>`\n\n"
+            + "`chiudi o close <nr sala>`\n\n"
 
             + "Countdown\n"
             + "`countdown | cd`\n\n")
