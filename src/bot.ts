@@ -54,7 +54,7 @@ class Bot {
     }
 
     private pingMsg(msg: Message, params: string[]) {
-        msg.reply("", { files: ["./src/muto.mp4"] })
+        msg.reply("", { files: ["./asssets/muto.mp4"] })
     }
 
     private bigliettoMsg(msg: Message, params: string[]) {
@@ -130,16 +130,15 @@ class Bot {
     }
 
     private async countdown(msg: Message, params: string[]) {
-        console.log("CD");
         let channel = msg.member.voice.channel;
         let conn = await channel.join();
-        let dispatcher = conn.play("http://nicolatoscan.altervista.org/c.mp3");
-        console.log("OK");
+        let dispatcher = conn.play("./asssets/countdown.mp3");
 
-        dispatcher.end(cb => {
-            channel.leave();
+        dispatcher.on('finish', f => {
+            setTimeout(() => {
+                channel.leave();
+            }, 300)
         })
-
     }
 
 
