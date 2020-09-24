@@ -29,28 +29,65 @@ class Bot {
 
         let params: string[] = msg.content.split(" ");
 
-        if (params[0] === 'help' || params[0] === 'aiuto' || params[0] === 'sos' || params[0] === 'SOS') {
-            this.helpMsg(msg, params);
-        } else if (params[0] === 'ping') {
-            this.pingMsg(msg, params);
-        } else if (params[0] === 'countdown' || params[0] === 'cd') {
-            this.countdown(msg, params);
-        } else if (params[0] === 'biglietto' || params[0] === 'ticket') {
-            this.bigliettoMsg(msg, params);
-        } else if (params[0] === 'sala' || params[0] === 'saloon' || params[0] === 'salone') {
-            this.salaMsg(msg, params);
-        } else if (params[0] === 'chiudi' || params[0] === 'close' || params[0] === 'chiudi sala') {
-            this.chiudiMsg(msg, params);
-        }
+        switch (params[0]) {
+            case 'help':
+            case 'aiuto':
+            case 'h':
+            case 'sos':
+                this.helpMsg(msg, params);
+                break;
 
+            case 'ping':
+                this.pingMsg(msg, params);
+                break;
+
+            case 'countdown':
+            case 'cd':
+                this.countdown(msg, params);
+                break;
+
+            case 'biglietto':
+            case 'ticket':
+            case 't':
+            case 'b':
+                this.bigliettoMsg(msg, params);
+
+            case 'sala':
+            case 'saloon':
+            case 'salone':
+            case 's':
+                this.salaMsg(msg, params);
+                break;
+
+            case 'chiudi':
+            case 'close':
+            case 'c':
+                this.chiudiMsg(msg, params);
+                break;
+
+            default:
+                break;
+        }
+        
     }
 
     private helpMsg(msg: Message, params: string[]) {
         msg.reply(
-            "\n`ping` - Pingami\n"
-            + "`sala <nr di ore> <nr di posti>` - Crea una sala ore e posti\n"
-            + "`biglietto o ticket <nr sala>` - Ottieni un biglietto per la Sala X\n"
-            + "`chiudi o chiudi sala <nr sala>` - Chiudi la Sala X")
+            "\n"
+            + "Ping:\n"
+            + "`ping`\n\n"
+
+            + "Crea una sala ore e posti\n"
+            + "`sala | s  <nr di ore> <nr di posti>`\n\n"
+
+            + "Ottieni un biglietto per la Sala X\n"
+            + "`biglietto | ticket | b | t <nr sala>`\n\n"
+
+            + "Chiudi la Sala X\n"
+            + "`chiudi | close | c <nr sala>`\n\n"
+
+            + "Countdown\n"
+            + "`countdown | cd`\n\n")
     }
 
     private pingMsg(msg: Message, params: string[]) {
@@ -134,7 +171,7 @@ class Bot {
         if (channel) {
             let conn = await channel.join();
             let dispatcher = conn.play("./asssets/countdown.mp3");
-            
+
             dispatcher.on('finish', f => {
                 setTimeout(() => {
                     channel.leave();
