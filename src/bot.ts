@@ -51,6 +51,7 @@ class Bot {
             case 't':
             case 'b':
                 this.bigliettoMsg(msg, params);
+                break;
 
             case 'sala':
             case 'saloon':
@@ -68,7 +69,7 @@ class Bot {
             default:
                 break;
         }
-        
+
     }
 
     private helpMsg(msg: Message, params: string[]) {
