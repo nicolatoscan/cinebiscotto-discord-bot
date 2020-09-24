@@ -158,7 +158,7 @@ class Bot {
             }
 
             if (await sala.closeSala(msg.member))
-                msg.reply(`Grazie aver tenuto pulito, la sala ${nr} è stata chiusa`);
+                msg.reply(`Grazie per aver tenuto pulito, la sala ${nr} è stata chiusa`);
             else
                 msg.reply(`Impossibile chiudere la sala`);
 
