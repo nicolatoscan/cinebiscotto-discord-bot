@@ -172,6 +172,7 @@ class Bot {
         if (channel) {
             let conn = await channel.join();
             let dispatcher = conn.play("./asssets/countdown.mp3");
+            msg.reply(`countdown initiated`);
 
             dispatcher.on('finish', f => {
                 setTimeout(() => {
